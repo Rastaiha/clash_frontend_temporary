@@ -1,6 +1,6 @@
 import React from 'react';
 import Login from './Login.js';
-import Board from './Board.js';
+import Game from './Game.js';
 
 import {
   BrowserRouter as Router,
@@ -17,8 +17,8 @@ function App() {
           <Route path="/login">
             <Login />
           </Route>
-          <Route path="/board">
-            <Board />
+          <Route path="/game">
+            <Game />
           </Route>
           <Route>
             <Redirect to="/login" />

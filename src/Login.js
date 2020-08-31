@@ -23,7 +23,7 @@ export default function Login(props) {
                 if (res.status === 200) {
                     localStorage.setItem('token', res.data.token);
                     localStorage.setItem('username', username);
-                    history.push('/board');
+                    history.push('/game');
                 }
             })
             .catch((err) => alert('Wrong password or username'));

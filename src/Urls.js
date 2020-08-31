@@ -1,5 +1,5 @@
 const urls = {
-    defaultUrl: 'http://localhost:8082/',
+    defaultUrl: 'http://localhost:8082',
     loginUrl: 'http://localhost:8082/authenticate',
     socketUrl: 'http://localhost:8082/websocket',
     mapDataUrl: 'http://localhost:8082/api/game/map',
