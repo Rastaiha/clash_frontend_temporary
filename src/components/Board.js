@@ -2,7 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import SockJS from "sockjs-client";
 import { Client } from '@stomp/stompjs';
-import urls from './Urls';
+import urls from '../Urls';
+import MapCell from './MapCell';
 
 
 class Board extends React.Component {
@@ -23,12 +24,12 @@ class Board extends React.Component {
     for (let i = 0; i < width; i++) {
       let row = [];
       for (let j = 0; j < height; j++) {
-        row.push({ type: " ", color: "cyan" });
+        row.push({ type: "EMPTY" });
       }
       map.push(row);
     }
-    mapEntities.forEach(({ x, y, type }) => { map[x][y] = { type, color: "green" } });
-    players.forEach(({ playerName, x, y }) => map[x][y] = { type: playerName, color: "red" });
+    mapEntities.forEach(({ x, y, type }) => { map[x][y] = { type } });
+    players.forEach(({ playerName, x, y }) => map[x][y] = { type: "PLAYER", playerName });
     return map;
   }
 
@@ -101,8 +102,8 @@ class Board extends React.Component {
         {
           map.map((row, index) => (
             <tr key={index}>
-              {row.map(({ type, color }, jndex) =>
-                (<th key={jndex} onClick={() => this.moveTo(index, jndex)} style={{ background: color, width: "50px", height: '50px' }}>{type[0]}</th>))}
+              {row.map((data, jndex) =>
+                (<MapCell key={jndex + data.type} data={data} onClick={() => this.moveTo(index, jndex)} />))}
             </tr>
           ))
         }

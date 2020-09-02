@@ -1,7 +1,7 @@
 import React from "react";
 import InventoryCard from "./InventoryCard.js";
 import axios from 'axios';
-import urls from './Urls';
+import urls from '../Urls';
 
 export default class Inventory extends React.Component {
     constructor(props) {
@@ -95,9 +95,9 @@ export default class Inventory extends React.Component {
     render() {
         const { armory, backpack, cardtypes } = this.state;
         return (
-            <>
-                <div className="row overflow-auto">
-                    <div class="d-flex flex-row flex-nowrap card-deck">
+            <div className="w-100">
+                <div className="overflow-auto">
+                    <div class="d-flex flex-row flex-nowrap">
                         {cardtypes.map(card => (
                             <InventoryCard
                                 title={card.name}
@@ -106,8 +106,8 @@ export default class Inventory extends React.Component {
                         ))}
                     </div>
                 </div>
-                <div className="row overflow-auto">
-                    <div class="d-flex flex-row flex-nowrap card-deck">
+                <div className="overflow-auto">
+                    <div class="d-flex flex-row flex-nowrap">
                         {armory.filter(card => !card.picked).map(card => (
                             <InventoryCard
                                 title={card.cardType.name}
@@ -117,8 +117,8 @@ export default class Inventory extends React.Component {
                         ))}
                     </div>
                 </div>
-                <div className="row overflow-auto">
-                    <div class="d-flex flex-row flex-nowrap card-deck">
+                <div className="overflow-auto">
+                    <div class="d-flex flex-row flex-nowrap">
                         {backpack.map(card => (
                             <InventoryCard
                                 title={card.cardType.name}
@@ -127,7 +127,7 @@ export default class Inventory extends React.Component {
                         ))}
                     </div>
                 </div>
-            </>
+            </div>
         );
     }
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import axios from 'axios';
-import urls from './Urls';
+import urls from '../Urls';
 
 export default function Login(props) {
     const [username, setUsername] = useState("");
@@ -31,7 +31,7 @@ export default function Login(props) {
     };
 
     return (
-        <div>
+        <div className="container">
             <form>
                 <div className="form-group">
                     <label htmlFor="exampleInputEmail1">{"Email address"}</label>

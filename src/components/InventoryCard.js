@@ -3,7 +3,7 @@ import React from "react";
 export default function InventoryCard(props) {
     const { onBuy, onSell, onPickup, onDiscard, title } = props;
     return (
-        <div className="card" style={{ width: "200px" }} >
+        <div className="card m-2" style={{ width: "200px" }} >
             <div className="card-body">
                 <h4 className="card-title">{title}</h4>
                 <h5 className="card-text">Power: 100</h5>
