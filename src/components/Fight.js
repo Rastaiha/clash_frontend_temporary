@@ -11,8 +11,9 @@ export default function Fight({ wsClient }) {
     const username = localStorage.getItem('username');
     const [deck, setDeck] = useState([]);
     const [results, setResults] = useState([]);
-    const [opponent, setOpponent] = useState(null);
-    const [message, setMessage] = useState("")
+    const [opponent, setOpponent] = useState({ username: "" });
+    const [message, setMessage] = useState("");
+    const [running, setRunning] = useState(false)
 
     useEffect(() => {
         getRequest(urls.defaultUrl + '/api/player/card'
@@ -21,23 +22,27 @@ export default function Fight({ wsClient }) {
         })
     }, []);
 
-    const handleFightMsg = useCallback(({ username, remained, message, fightRounds }) => {
-        if (username)
-            setOpponent(username);
-        else if (remained)
+    const handleFightMsg = useCallback(({ host, guest, remained, message, fightRounds }) => {
+        if (host) {
+            setRunning(true);
+            setOpponent(host.username === username ? guest : host);
+        } else if (remained)
             setMessage(`${message} | ${remained}`);
         else if (fightRounds) {
             let newDeck = deck.map(card =>
-                fightRounds.some(({ cardsPlayed }) => cardsPlayed.some(({ id }) => id === card.id))
+                fightRounds.some(({ winnerCard, loserCard }) =>
+                    winnerCard.id === card.id || loserCard.id === card.id)
                     ? { ...card, used: true }
                     : { ...card, used: false }
             );
             setDeck(newDeck);
             setResults(fightRounds);
         }
-        else
-            setMessage(message, () => setInterval(() => setOpponent(null), 1000));
-    }, [deck]);
+        else {
+            setMessage(message);
+            setInterval(() => setRunning(false), 1500);
+        }
+    }, [deck, username]);
 
     useEffect(() => {
         wsClient.subscribe('/user/queue/fight', message => {
@@ -55,7 +60,7 @@ export default function Fight({ wsClient }) {
     }
 
     return (
-        <Modal show={!!opponent} size="lg">
+        <Modal show={running} size="lg">
             <Modal.Header>
                 <Modal.Title>{message}</Modal.Title>
             </Modal.Header>
@@ -72,9 +77,9 @@ export default function Fight({ wsClient }) {
                             ))}
                         </Col>
                         <Col xs={8}>
-                            <h4 class="text-center">{username} vs {opponent}</h4>
+                            <h4 class="text-center">{username} vs {opponent.username}</h4>
                             {results.map(round => (
-                                <FightRound round={round} />
+                                <FightRound {...round} />
                             ))}
                         </Col>
                     </Row>
