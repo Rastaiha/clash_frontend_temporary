@@ -6,10 +6,7 @@ import urls from '../Urls.js';
 import FightCard from "./FightCard";
 import FightRound from "./FightRound";
 
-import SockJS from "sockjs-client";
-import { Client } from '@stomp/stompjs';
-
-export default function Fight(props) {
+export default function Fight({ wsClient }) {
     // const { wsClient } = props;
     const username = localStorage.getItem('username');
     const [deck, setDeck] = useState([]);
@@ -43,30 +40,11 @@ export default function Fight(props) {
     }, [deck]);
 
     useEffect(() => {
-        const socket = () => new SockJS(urls.socketUrl);
-        const createdClient = new Client({
-            webSocketFactory: socket,
-            reconnectDelay: 0,
-            connectHeaders: {
-                login: {},
-                passcode: localStorage.getItem('username'),
-            },
-            heartbeatIncoming: 5000,
-            heartbeatOutgoing: 5000,
-            debug: (text) => console.log(text),
-            onConnect: frame => {
-                console.log('shit: ' + frame);
-                createdClient.subscribe('/user/queue/fight', message => {
-                    console.log(message);
-                    handleFightMsg(JSON.parse(message.body));
-                });
-            },
-            onDisconnect: () => { },
-            // onWebSocketClose,
+        wsClient.subscribe('/user/queue/fight', message => {
+            console.log(message);
+            handleFightMsg(JSON.parse(message.body));
         });
-        createdClient.activate();
-        return () => createdClient.deactivate();
-    }, [handleFightMsg]);
+    }, [handleFightMsg, wsClient]);
 
     const playCard = cardId => {
         patchRequest(urls.defaultUrl + '/api/playerfight', { id: cardId }).then(() => {

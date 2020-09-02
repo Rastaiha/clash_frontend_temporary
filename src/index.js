@@ -4,7 +4,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
+import axios from "axios";
 
+axios.defaults.validateStatus = function () {
+  return true;
+};
 
 ReactDOM.render(
   <React.StrictMode>

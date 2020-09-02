@@ -21,11 +21,9 @@ export default function MapCell({ data: { type, playerName }, onClick }) {
     return (
         <th onClick={onClick} style={{ background, width: "40px", height: "40px" }}>
             <div className="w-100 h-100" ref={target} />
-            {type === "PLAYER" && playerName !== username && (
-                <Overlay target={target.current} show={true} placement="top">
-                    <Button onClick={fight}>Fight!</Button>
-                </Overlay>
-            )}
+            <Overlay target={target.current} show={type === "PLAYER" && playerName !== username} placement="top">
+                <Button onClick={fight}>Fight!</Button>
+            </Overlay>
         </th>
     )
 }

@@ -1,7 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import SockJS from "sockjs-client";
-import { Client } from '@stomp/stompjs';
 import urls from '../Urls';
 import MapCell from './MapCell';
 
@@ -46,33 +44,15 @@ class Board extends React.Component {
   }
 
   connectWS = () => {
-    const socket = () => new SockJS(urls.socketUrl);
-
-    this.createdClient = new Client({
-      webSocketFactory: socket,
-      reconnectDelay: 0,
-      connectHeaders: {
-        login: {},
-        passcode: localStorage.getItem('username'),
-      },
-      heartbeatIncoming: 5000,
-      heartbeatOutgoing: 5000,
-      debug: (text) => console.log(text),
-      onConnect: frame => {
-        console.log('Connected: ' + frame);
-        this.createdClient.subscribe('/user/queue/team', messageOutput => {
-          this.handlePlayerLoc(JSON.parse(messageOutput.body));
-        });
-      },
-      onDisconnect: this.setState({ subscribed: false }),
-      // onWebSocketClose,
+    const { wsClient } = this.props;
+    wsClient.subscribe('/user/queue/team', messageOutput => {
+      this.handlePlayerLoc(JSON.parse(messageOutput.body));
     });
-    this.createdClient.activate();
   };
 
-  componentWillUnmount() {
-    this.createdClient.deactivate();
-  }
+  // componentWillUnmount() {
+  //   this.createdClient.deactivate();
+  // }
 
   handlePlayerLoc = newPlayer => {
     console.log(newPlayer);
